@@ -61,7 +61,7 @@ public class MainFrame extends JFrame {
     private static int[] RandomArray(int[] dates){
 		Random r = new Random();
 		int temp = 0;
-		for(int i = 15;i != 0;i--){
+		for(int i = dates.length;i != 0;i--){
 			int rtemp = r.nextInt(i+1);
 			temp = dates[i];
 			dates[i] = dates[rtemp];
