@@ -9,7 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Random;
 
-public class MainFrame extends JFrame implements KeyListener,ActionListener{
+public class MainFrame extends JFrame implements KeyListener,ActionListener {
     /**
      *
      */
@@ -19,7 +19,7 @@ public class MainFrame extends JFrame implements KeyListener,ActionListener{
     
     private int score = 0;
 
-    public MainFrame(){
+    public MainFrame() {
         this.Init();
         this.initFrame();
         this.paintView();
@@ -29,7 +29,7 @@ public class MainFrame extends JFrame implements KeyListener,ActionListener{
 		super.setVisible(true);
     }
 
-    public void Init(){
+    public void Init() {
         this.generateTwo();
         this.generateTwo();
     }
