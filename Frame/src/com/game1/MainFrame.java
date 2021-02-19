@@ -16,11 +16,12 @@ public class MainFrame extends JFrame implements KeyListener,ActionListener {
     private static final long serialVersionUID = 1L;
     //数组初始化
     private int[][] datas = new int[4][4];
-    
+    //计分器
     private int score = 0;
 
     public MainFrame() {
-        this.Init();
+        this.generateTwo();
+        this.generateTwo();
         this.initFrame();
         this.paintView();
         //为键盘添加监听
@@ -29,11 +30,7 @@ public class MainFrame extends JFrame implements KeyListener,ActionListener {
 		super.setVisible(true);
     }
 
-    public void Init() {
-        this.generateTwo();
-        this.generateTwo();
-    }
-     /**
+    /**
      * 此方法用与初始化窗口，所有窗体的相关设置都在这个方法中完成
      */
     public void initFrame(){
@@ -51,20 +48,26 @@ public class MainFrame extends JFrame implements KeyListener,ActionListener {
 		super.setLayout(null);
 
     }
+
     /**
      * 此方法用于绘制游戏界面 
      */
     public void paintView() {
         super.getContentPane().removeAll();
-		for(int i = 0;i < 4;i++){
-		  	for(int j = 0;j < 4;j++){
-			    JLabel image = new JLabel(new ImageIcon("D:\\Desktop\\Material\\day05\\资料\\image\\A-"+datas[i][j]+".png"));
+        if(!check()) {
+            JLabel loseLabel = new JLabel(new ImageIcon("D:\\Desktop\\Demo\\Frame\\res\\image\\A-lose.png"));
+            loseLabel.setBounds(90, 100, 334, 228);
+            super.getContentPane().add(loseLabel);
+        }
+		for(int i = 0;i < 4;i++) {
+		  	for(int j = 0;j < 4;j++) {
+			    JLabel image = new JLabel(new ImageIcon("D:\\Desktop\\Demo\\Frame\\res\\image\\A-"+datas[i][j]+".png"));
 			    image.setBounds(50+100*j,50+100*i,100,100);
 			    super.getContentPane().add(image);
 			}
 		}
 		
-		JLabel background = new JLabel(new ImageIcon("D:\\Desktop\\Material\\day05\\资料\\image\\A-Background.jpg"));
+		JLabel background = new JLabel(new ImageIcon("D:\\Desktop\\Demo\\Frame\\res\\image\\A-Background.jpg"));
         background.setBounds(40,40,420,420);
         //获得一个容器，将控件放入其中
 	    super.getContentPane().add(background);
@@ -80,12 +83,11 @@ public class MainFrame extends JFrame implements KeyListener,ActionListener {
     
     /**
      * 在数列空白处随机产生2
-     * @return
      */
     private void generateTwo() {
 		// 1. 创建两个数组, 准备记录二维数组中空白格子 i 和 j 的索引位置.
         //arrayI = {-1, -1, -1, -1, ...};
-        //arrayJ = {-1, -1, -1, -1, ...;
+        //arrayJ = {-1, -1, -1, -1, ...};
         int[] arrayI = new int[datas.length*datas.length];
         int[] arrayJ = new int[datas.length*datas.length];
         for(int i = 0; i < arrayI.length; i++){
@@ -145,8 +147,10 @@ public class MainFrame extends JFrame implements KeyListener,ActionListener {
             generateTwo();
         }
 
+        // 每一次移动的逻辑执行完, 都要去调用check方法, 检查游戏是否是失败的状态.
+        this.check();
         // 每一次移动完成, 重新绘制界面
-        paintView();
+        this.paintView();
     }
     
     @Override
@@ -154,11 +158,11 @@ public class MainFrame extends JFrame implements KeyListener,ActionListener {
 
     private void moveToBottom() {
         // 1. 数组顺时针旋转
-        clockwise();
+        this.clockwise();
         // 2. 左移
-        moveToLeft();
+        this.moveToLeft();
         // 3. 数组逆时针旋转
-        antiClockwise();
+        this.antiClockwise();
     }
 
     private void moveToRight() {
@@ -173,12 +177,13 @@ public class MainFrame extends JFrame implements KeyListener,ActionListener {
 
     private void moveToTop() {
         // 1. 数组逆时针旋转
-        antiClockwise();
+        this.antiClockwise();
         // 2. 左移动
-        moveToLeft();
+        this.moveToLeft();
         // 3. 数组顺时针旋转
-        clockwise();
+        this.clockwise();
     }
+    
     /**
      * 左移数组
      */
@@ -218,7 +223,7 @@ public class MainFrame extends JFrame implements KeyListener,ActionListener {
     /**
      * 用于处理一维数组的反转
      */
-    public void reverseArray(int[] arr) {
+    private void reverseArray(int[] arr) {
         for (int start = 0, end = arr.length - 1; start < end; start++, end--) {
             int temp = arr[start];
             arr[start] = arr[end];
@@ -228,7 +233,7 @@ public class MainFrame extends JFrame implements KeyListener,ActionListener {
     /**
      * 用于处理二维数组的反转
      */
-    public void horizontalSwap() {
+    private void horizontalSwap() {
         for (int i = 0; i < datas.length; i++) {
             // 调用reverseArrays方法, 对每一个一维数组进行反转.
             reverseArray(datas[i]);
@@ -238,7 +243,7 @@ public class MainFrame extends JFrame implements KeyListener,ActionListener {
     /**
      * 将数组顺时针旋转
      */
-    public void clockwise() {
+    private void clockwise() {
         int[][] newArr = new int[datas.length][datas.length];
 
         for (int i = 0; i < datas.length; i++) {
@@ -253,7 +258,7 @@ public class MainFrame extends JFrame implements KeyListener,ActionListener {
     /**
      * 将数组逆时针旋转
      */
-    public void antiClockwise() {
+    private void antiClockwise() {
         int[][] newArr = new int[datas.length][datas.length];
 
         for (int i = 0; i < 4; i++) {
@@ -263,6 +268,110 @@ public class MainFrame extends JFrame implements KeyListener,ActionListener {
         }
 
         datas = newArr;
+    }
+
+    /**
+     * 判断整个数组能否上下左右移动
+     * @return
+     */
+    private boolean check() {
+        if (checkLeft() == false && checkRight() == false && checkTop() == false && checkBottom() == false) {
+            // 失败的状态.
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 此方法判断是否可以左移动
+     */
+    private boolean checkLeft() {
+        // 1. 创建新数组, 用于备份原数组数据.
+        int[][] newArr = new int[datas.length][datas.length];
+        // 2. 将原数组数据, 拷贝到新数组中.
+        copyArray(datas, newArr);
+        // 3. 调用左移动方法, 对原数组数据进行左移动
+        moveToLeft();
+        // 4. 使用移动后的数据, 和备份的数据逐个进行比对, 并使用flag变量进行记录.
+        // true : 可以移动，false : 不可以移动.
+        boolean flag = false;
+        //比较两数组是否相同
+        flag = this.compare(datas, newArr);
+        // 5. 确定信息后, 恢复原数组数据(再做一次拷贝)
+        copyArray(newArr, datas);
+        // 6. 返回结果信息.
+        return flag;
+    }
+
+    /**
+     * 此方法判断是否可以右移动
+     */
+    private boolean checkRight() {
+        int[][] newArr = new int[datas.length][datas.length];
+        copyArray(datas, newArr);
+        moveToRight();
+        boolean flag = false;
+        flag = this.compare(datas, newArr);
+        copyArray(newArr, datas);
+        return flag;
+    }
+
+    /**
+     * 此方法判断是否可以上移动
+     */
+    private boolean checkTop() {
+        int[][] newArr = new int[datas.length][datas.length];
+        this.copyArray(datas, newArr);
+        this.moveToTop();
+        boolean flag = false;
+        flag = this.compare(datas, newArr);
+        copyArray(newArr, datas);
+        return flag;
+    }
+
+    /**
+     * 此方法判断是否可以下移动
+     */
+    private boolean checkBottom() {
+        int[][] newArr = new int[datas.length][datas.length];
+        copyArray(datas, newArr);
+        moveToBottom();
+        boolean flag = false;
+        flag = this.compare(datas, newArr);
+        copyArray(newArr, datas);
+        return flag;
+    }
+
+     /**
+     * 此方法用于二维数组的数据拷贝
+     * @param src  原数组
+     * @param dest 目标数组
+     */
+    private void copyArray(int[][] src, int[][] dest) {
+        for (int i = 0; i < src.length; i++) {
+            for (int j = 0; j < src[i].length; j++) {
+                dest[i][j] = src[i][j];
+            }
+        }
+    }
+    
+    /**
+     * 此方法用于比较两数组是否相同
+     * @param datas1 数组1
+     * @param datas2 数组2
+     * @return 不同：true,相同：false
+     */
+    private boolean compare(int[][] datas1,int[][] datas2) {
+        boolean flag = false;
+        for (int i = 0; i < datas1.length; i++) {
+            for (int j = 0; j < datas1[i].length; j++) {
+                if (datas1[i][j] != datas2[i][j]) {
+                    flag = true;
+                    return flag;
+                }
+            }
+        }
+        return flag;
     }
 
 }
