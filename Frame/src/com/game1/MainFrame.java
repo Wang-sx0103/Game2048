@@ -182,16 +182,16 @@ public class MainFrame extends JFrame implements KeyListener, ActionListener {
 
         if (keyCode == 37) {
             // 调用左移动的方法.
-            this.moveToLeft();
+            this.moveToLeft(true);
         } else if (keyCode == 38) {
             // 上移动
-            this.moveToTop();
+            this.moveToTop(true);
         } else if (keyCode == 39) {
             // 调用右移动的方法
-            this.moveToRight();
+            this.moveToRight(true);
         } else if (keyCode == 40) {
             // 调用下移动的方法
-            this.moveToBottom();
+            this.moveToBottom(true);
         } else {
             return;
         }
@@ -207,30 +207,30 @@ public class MainFrame extends JFrame implements KeyListener, ActionListener {
     public void keyReleased(KeyEvent e) {
     }
 
-    private void moveToBottom() {
+    private void moveToBottom(boolean flag) {
         // 1. 数组顺时针旋转
         this.clockwise();
         // 2. 左移
-        this.moveToLeft();
+        this.moveToLeft(flag);
         // 3. 数组逆时针旋转
         this.antiClockwise();
     }
 
-    private void moveToRight() {
+    private void moveToRight(boolean flag) {
         // 1. 反转数组
         this.horizontalSwap();
         // 2. 左移动
-        this.moveToLeft();
+        this.moveToLeft(flag);
         // 3. 反转数组
         this.horizontalSwap();
 
     }
 
-    private void moveToTop() {
+    private void moveToTop(boolean flag) {
         // 1. 数组逆时针旋转
         this.antiClockwise();
         // 2. 左移动
-        this.moveToLeft();
+        this.moveToLeft(flag);
         // 3. 数组顺时针旋转
         this.clockwise();
     }
@@ -238,7 +238,7 @@ public class MainFrame extends JFrame implements KeyListener, ActionListener {
     /**
      * 左移数组
      */
-    private void moveToLeft() {
+    private void moveToLeft(boolean flag) {
         for (int i = 0; i < datas.length; i++) {
             // 1. 后置0号元素
             int[] newArr = new int[datas[i].length];
@@ -258,8 +258,9 @@ public class MainFrame extends JFrame implements KeyListener, ActionListener {
                     datas[i][x] *= 2;
 
                     // 1. 计算得分
-                    this.score += datas[i][x];
-
+                    if (flag) {
+                        this.score += datas[i][x];
+                    }
                     // 2. 后续元素前移, 并在末尾补0
                     for (int j = x + 1; j < datas[i].length - 1; j++) {
                         datas[i][j] = datas[i][j + 1];
@@ -343,7 +344,7 @@ public class MainFrame extends JFrame implements KeyListener, ActionListener {
         // 2. 将原数组数据, 拷贝到新数组中
         copyArray(datas, newArr);
         // 3. 调用左移动方法, 对原数组数据进行左移动
-        moveToLeft();
+        moveToLeft(false);
         // 4. 使用移动后的数据, 和备份的数据逐个进行比对, 并使用flag变量进行记录
         // true : 可以移动，false : 不可以移动
         boolean flag = false;
@@ -361,7 +362,7 @@ public class MainFrame extends JFrame implements KeyListener, ActionListener {
     private boolean checkRight() {
         int[][] newArr = new int[datas.length][datas.length];
         copyArray(datas, newArr);
-        moveToRight();
+        moveToRight(false);
         boolean flag = false;
         flag = this.compare(datas, newArr);
         copyArray(newArr, datas);
@@ -374,7 +375,7 @@ public class MainFrame extends JFrame implements KeyListener, ActionListener {
     private boolean checkTop() {
         int[][] newArr = new int[datas.length][datas.length];
         this.copyArray(datas, newArr);
-        this.moveToTop();
+        this.moveToTop(false);
         boolean flag = false;
         flag = this.compare(datas, newArr);
         copyArray(newArr, datas);
@@ -387,7 +388,7 @@ public class MainFrame extends JFrame implements KeyListener, ActionListener {
     private boolean checkBottom() {
         int[][] newArr = new int[datas.length][datas.length];
         copyArray(datas, newArr);
-        moveToBottom();
+        moveToBottom(false);
         boolean flag = false;
         flag = this.compare(datas, newArr);
         copyArray(newArr, datas);
