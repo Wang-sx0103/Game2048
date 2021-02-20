@@ -133,7 +133,6 @@ public class MainFrame extends JFrame implements KeyListener, ActionListener {
 
         // 刷新界面
         super.getContentPane().repaint();
-
     }
     
     /**
@@ -155,8 +154,7 @@ public class MainFrame extends JFrame implements KeyListener, ActionListener {
      */
     private void generateTwo() {
         // 1. 创建两个数组, 准备记录二维数组中空白格子 i 和 j 的索引位置.
-        // arrayI = {-1, -1, -1, -1, ...};
-        // arrayJ = {-1, -1, -1, -1, ...};
+        // arrayI = arrayJ = {-1, -1, -1, -1, ...};
         int[] arrayI = new int[datas.length * datas.length];
         int[] arrayJ = new int[datas.length * datas.length];
         for (int i = 0; i < arrayI.length; i++) {
@@ -164,24 +162,24 @@ public class MainFrame extends JFrame implements KeyListener, ActionListener {
             arrayJ[i] = -1;
         }
 
-        int k = 0;
+        int counter = 0;
 
         // 2. 遍历二维数组, 取出每一个元素, 并判断当前元素是否是空白格式 (判断是否是0)
         for (int i = 0; i < datas.length; i++) {
             for (int j = 0; j < datas[i].length; j++) {
                 if (datas[i][j] == 0) {
                     // 3. 是0的话, 将索引存入arrayI和arrayJ数组中.
-                    arrayI[k] = i;
-                    arrayJ[k] = j;
-                    k++;
+                    arrayI[counter] = i;
+                    arrayJ[counter] = j;
+                    counter++;
                 }
             }
         }
 
         // 4. 如果k变量记录的不是0, 代表数组中还有空白的位置, 就可以产生新的数字方块.
-        if (k != 0) {
+        if (counter != 0) {
             Random r = new Random();
-            int index = r.nextInt(k);
+            int index = r.nextInt(counter);
             int x = arrayI[index];
             int y = arrayJ[index];
             datas[x][y] = 2;
@@ -223,34 +221,69 @@ public class MainFrame extends JFrame implements KeyListener, ActionListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-    }
+    public void keyTyped(KeyEvent e) {}
 
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
 
         if (keyCode == 37) {
-            // 调用左移动的方法.
-            this.moveToLeft(true);
+            if (this.checkLeft()) {
+                // 每一次移动完成,检查游戏是否
+                //this.check();
+                // 调用左移动的方法.
+                this.moveToLeft(true);
+                // 每一次移动完成,检查数组能否生成2
+                this.generateTwo();
+                // 每一次移动完成,重新绘制界面
+                this.paintView();
+            } else if (!checkLeft()) {
+                return;
+            }
         } else if (keyCode == 38) {
-            // 上移动
-            this.moveToTop(true);
+            if (this.checkTop()) {
+                // 每一次移动完成,检查游戏是否
+                //this.check();
+                // 调用左移动的方法.
+                this.moveToTop(true);
+                // 每一次移动完成,检查数组能否生成2
+                this.generateTwo();
+                // 每一次移动完成,重新绘制界面
+                this.paintView();
+            } else if (!checkLeft()) {
+                return;
+            }
         } else if (keyCode == 39) {
+            if (this.checkRight()) {
+                // 每一次移动完成,检查游戏是否
+                //this.check();
+                // 调用左移动的方法.
+                this.moveToRight(true);
+                // 每一次移动完成,检查数组能否生成2
+                this.generateTwo();
+                // 每一次移动完成,重新绘制界面
+                this.paintView();
+            } else if (!checkLeft()) {
+                return;
+            }
             // 调用右移动的方法
-            this.moveToRight(true);
         } else if (keyCode == 40) {
             // 调用下移动的方法
-            this.moveToBottom(true);
+            if (this.checkBottom()) {
+                // 每一次移动完成,检查游戏是否
+                //this.check();
+                // 调用左移动的方法.
+                this.moveToBottom(true);
+                // 每一次移动完成,检查数组能否生成2
+                this.generateTwo();
+                // 每一次移动完成,重新绘制界面
+                this.paintView();
+            } else if (!checkLeft()) {
+                return;
+            }
         } else {
             return;
         }
-        // 每一次移动完成,检查游戏是否
-        this.check();
-        // 每一次移动完成,检查数组能否生成2
-        this.generateTwo();
-        // 每一次移动完成,重新绘制界面
-        this.paintView();
     }
 
     @Override
@@ -392,13 +425,13 @@ public class MainFrame extends JFrame implements KeyListener, ActionListener {
         // 1. 创建新数组, 用于备份原数组数据
         int[][] newArr = new int[datas.length][datas.length];
         // 2. 将原数组数据, 拷贝到新数组中
-        copyArray(datas, newArr);
+        this.copyArray(datas, newArr);
         // 3. 调用左移动方法, 对原数组数据进行左移动
-        moveToLeft(false);
+        this.moveToLeft(false);
         // 4. 使用移动后的数据, 和备份的数据逐个进行比对, 并使用flag变量进行记录
         // true : 可以移动，false : 不可以移动
         boolean flag = false;
-        // 比较两数组是否相同
+        // 比较两数组是否相同,不同返回true
         flag = this.compare(datas, newArr);
         // 5. 确定信息后, 恢复原数组数据(即再进行一次拷贝)
         this.copyArray(newArr, datas);
