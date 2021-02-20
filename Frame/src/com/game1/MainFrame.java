@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.Image;
 import java.util.Random;
 
 public class MainFrame extends JFrame implements KeyListener, ActionListener {
@@ -18,10 +19,12 @@ public class MainFrame extends JFrame implements KeyListener, ActionListener {
      */
     private static final long serialVersionUID = 1L;
     // 数组初始化
-    private int[][] datas = new int[4][4];
+    private int level = 4;
+    private int iconSize = 100;
+    private double zoom = 1.0;
+    private int[][] datas = new int[level][level];
     // 计分器
     private int score = 0;
-
     // 图片资源的标识
     private String theme = "A-";
 
@@ -29,6 +32,10 @@ public class MainFrame extends JFrame implements KeyListener, ActionListener {
     JMenuItem item1 = new JMenuItem("Classic");
     JMenuItem item2 = new JMenuItem("Neon");
     JMenuItem item3 = new JMenuItem("Candy");
+    JMenuItem item4 = new JMenuItem("4");
+    JMenuItem item5 = new JMenuItem("5");
+    JMenuItem item6 = new JMenuItem("6");
+    JMenuItem item8 = new JMenuItem("8");
 
     public MainFrame() {
         this.generateTwo();
@@ -50,18 +57,28 @@ public class MainFrame extends JFrame implements KeyListener, ActionListener {
         JMenuBar menuBar = new JMenuBar();
         // 2. 创建栏目对象 JMenu (换肤, 关于我们)
         JMenu menu1 = new JMenu("Theme");
+        JMenu menu3 = new JMenu("Mode");
         JMenu menu2 = new JMenu("About");
         // 3. 将菜单对象放到菜单条中
         menuBar.add(menu1);
+        menuBar.add(menu3);
         menuBar.add(menu2);
         // 4. 将菜单项目放入栏目中
         menu1.add(item1);
         menu1.add(item2);
         menu1.add(item3);
+        menu3.add(item4);
+        menu3.add(item5);
+        menu3.add(item6);
+        menu3.add(item8);
         // 5. 创建菜单项目监听机制
         item1.addActionListener(this);
         item2.addActionListener(this);
         item3.addActionListener(this);
+        item4.addActionListener(this);
+        item5.addActionListener(this);
+        item6.addActionListener(this);
+        item8.addActionListener(this);
         // 6. 给窗体对象设置菜单条.
         super.setJMenuBar(menuBar);
 
@@ -95,11 +112,11 @@ public class MainFrame extends JFrame implements KeyListener, ActionListener {
             loseLabel.setBounds(90, 100, 334, 228);
             super.getContentPane().add(loseLabel);
         }
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                JLabel image = new JLabel(
-                        new ImageIcon("D:\\Desktop\\Demo\\Frame\\res\\image\\" + theme + datas[i][j] + ".png"));
-                image.setBounds(50 + 100 * j, 50 + 100 * i, 100, 100);
+        for (int i = 0; i < level; i++) {
+            for (int j = 0; j < level; j++) {
+                ImageIcon Icon = iconChange(new ImageIcon("D:\\Desktop\\Demo\\Frame\\res\\image\\" + theme + datas[i][j] + ".png"),zoom);
+                JLabel image = new JLabel(Icon);
+                image.setBounds(43 + this.iconSize * j, 43 + this.iconSize * i, this.iconSize, this.iconSize);
                 super.getContentPane().add(image);
             }
         }
@@ -111,12 +128,26 @@ public class MainFrame extends JFrame implements KeyListener, ActionListener {
         super.getContentPane().add(background);
 
         JLabel scoreLabel = new JLabel("得分: " + this.score);
-        scoreLabel.setBounds(50, 20, 100, 20);
+        scoreLabel.setBounds(50, 0, 100, 40);
         super.getContentPane().add(scoreLabel);
 
         // 刷新界面
         super.getContentPane().repaint();
 
+    }
+    
+    /**
+     * 将ImageIcon对象进行缩放
+     * @param image 原图像
+     * @param i 缩放倍数
+     * @return 缩放后图像
+     */
+    private ImageIcon iconChange(ImageIcon image,double i) {
+        int width = (int) (image.getIconWidth()*i);
+        int height = (int) (image.getIconHeight()*i);
+        Image img = image.getImage().getScaledInstance(width, height, Image.SCALE_DEFAULT);
+        ImageIcon image2=new ImageIcon(img);
+        return image2;
     }
 
     /**
@@ -165,10 +196,29 @@ public class MainFrame extends JFrame implements KeyListener, ActionListener {
             theme = "B-";
         } else if (e.getSource() == item3) {
             theme = "C-";
-        } else {
-            System.out.println("敬请期待");
+        } else {}
+        
+        if (e.getSource() == item4) {
+            this.level = 4;
+            this.iconSize = (int) 420/4;
+            this.zoom = (double) this.iconSize/100;
+            this.arrSizeChange(4);
+        } else if (e.getSource() == item5) {
+            this.level = 5;
+            this.iconSize = (int) 420/5;
+            this.zoom = (double) this.iconSize/100;
+            this.arrSizeChange(5);
+        } else if (e.getSource() == item6) {
+            this.level = 6;
+            this.iconSize = (int) 420/6;
+            this.zoom = (double) this.iconSize/100;
+            this.arrSizeChange(6);
+        } else if (e.getSource() == item8) {
+            this.level = 8;
+            this.iconSize = (int) 420/8;
+            this.zoom = (double) this.iconSize/100;
+            this.arrSizeChange(8);
         }
-
         paintView();
     }
 
@@ -314,8 +364,8 @@ public class MainFrame extends JFrame implements KeyListener, ActionListener {
     private void antiClockwise() {
         int[][] newArr = new int[datas.length][datas.length];
 
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
+        for (int i = 0; i < datas.length; i++) {
+            for (int j = 0; j < datas.length; j++) {
                 newArr[datas.length - (j + 1)][i] = datas[i][j];
             }
         }
@@ -427,5 +477,45 @@ public class MainFrame extends JFrame implements KeyListener, ActionListener {
             }
         }
         return flag;
+    }
+
+    /**
+     * 重新构建数组的大小
+     * @param length
+     */
+    private void arrSizeChange(int length) {
+        if (length == 4) {
+            if (length == datas.length) {
+                return;
+            }
+            int[][] newArr = new int[4][4];
+            this.datas = newArr;
+            this.generateTwo();
+            this.generateTwo();
+        } else if (length == 5) {
+            if (length == datas.length) {
+                return;
+            }
+            int[][] newArr = new int[5][5];
+            this.datas = newArr;
+            this.generateTwo();
+            this.generateTwo();
+        } else if (length == 6) {
+            if (length == datas.length) {
+                return;
+            }
+            int[][] newArr = new int[6][6];
+            this.datas = newArr;
+            this.generateTwo();
+            this.generateTwo();
+        } else if (length == 8) {
+            if (length == datas.length) {
+                return;
+            }
+            int[][] newArr = new int[8][8];
+            this.datas = newArr;
+            this.generateTwo();
+            this.generateTwo();
+        }
     }
 }
