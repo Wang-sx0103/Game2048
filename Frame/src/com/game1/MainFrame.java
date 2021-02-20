@@ -116,14 +116,14 @@ public class MainFrame extends JFrame implements KeyListener, ActionListener {
             for (int j = 0; j < level; j++) {
                 ImageIcon Icon = iconChange(new ImageIcon("D:\\Desktop\\Demo\\Frame\\res\\image\\" + theme + datas[i][j] + ".png"),zoom);
                 JLabel image = new JLabel(Icon);
-                image.setBounds(43 + this.iconSize * j, 43 + this.iconSize * i, this.iconSize, this.iconSize);
+                image.setBounds(40 + this.iconSize * j, 40 + this.iconSize * i, this.iconSize, this.iconSize);
                 super.getContentPane().add(image);
             }
         }
 
         JLabel background = new JLabel(
                 new ImageIcon("D:\\Desktop\\Demo\\Frame\\res\\image\\" + theme + "Background.jpg"));
-        background.setBounds(40, 40, 420, 420);
+        background.setBounds(40, 40, this.iconSize*this.level, this.iconSize*this.level);
         // 获得一个容器，将控件放入其中
         super.getContentPane().add(background);
 
