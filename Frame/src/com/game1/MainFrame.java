@@ -92,6 +92,7 @@ public class MainFrame extends JFrame implements KeyListener, ActionListener {
         super.setTitle("2048");
         // 设置窗口尺寸
         super.setSize(514, 538);
+        super.setResizable(false);
         // 窗口居中
         super.setLocationRelativeTo(null);
         // 窗口置顶
