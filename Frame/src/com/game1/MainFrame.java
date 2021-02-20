@@ -4,8 +4,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import java.awt.event.ActionEvent;
@@ -14,7 +12,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Random;
 
-public class MainFrame extends JFrame implements KeyListener, ActionListener, MenuListener {
+public class MainFrame extends JFrame implements KeyListener, ActionListener {
     /**
      *
      */
@@ -64,7 +62,6 @@ public class MainFrame extends JFrame implements KeyListener, ActionListener, Me
         item1.addActionListener(this);
         item2.addActionListener(this);
         item3.addActionListener(this);
-        menu2.addMenuListener(this);
         // 6. 给窗体对象设置菜单条.
         super.setJMenuBar(menuBar);
 
@@ -428,17 +425,4 @@ public class MainFrame extends JFrame implements KeyListener, ActionListener, Me
         }
         return flag;
     }
-
-    @Override
-    public void menuSelected(MenuEvent e) {
-        System.out.println("敬请期待");
-
-    }
-
-    @Override
-    public void menuDeselected(MenuEvent e) {}
-
-    @Override
-    public void menuCanceled(MenuEvent e) {}
-
 }
