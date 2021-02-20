@@ -192,6 +192,8 @@ public class MainFrame extends JFrame implements KeyListener, ActionListener {
         } else if (keyCode == 40) {
             // 调用下移动的方法
             this.moveToBottom();
+        } else {
+            return;
         }
         // 每一次移动完成,检查游戏是否
         this.check();
