@@ -1,4 +1,4 @@
-package com.game1;
+package com.alpha.game1;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
