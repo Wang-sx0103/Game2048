@@ -12,6 +12,7 @@
 
 # Configuration Files
 *.json
+Demo.iml
 
 # PhotoType
 #*.png
@@ -29,5 +30,7 @@
 #.vscode#
 .vscode/
 
+#IDEA#
+.idea/
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
